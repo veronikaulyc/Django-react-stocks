@@ -69,19 +69,17 @@ class Categories extends Component {
   };
 
   renderCategoriesList = (key) => {
-    console.log(key);
     const category = this.props.categories[key];
     if (category) {
-      console.log(category);
       const categoryValue = this.props.categoriesTotal[key] || 0;
       const categoryPercentage = this.props.userTotal ?
         parseInt(1000 * categoryValue / this.props.userTotal, 10) / 10 : 0;
       const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
     return(
       <div className="grid-edit category-edit" key={key}>
-        <input type="text" name="name" value={category.category_name} placeholder="Category Name"
+        <input type="text" name="category_name" value={category.category_name} placeholder="Category Name"
           onChange={(e) => this.handleChange(e, key)} required/>
-          <input type="number" name="percentage" value={category.category_percentage}
+          <input type="number" name="category_percentage" value={category.category_percentage}
           onChange={(e) => this.handleChange(e, key)} placeholder="Desirable %"/>
           <span>{categoryValue.toFixed(2)}</span>
           <span>{categoryPercentage}%</span>

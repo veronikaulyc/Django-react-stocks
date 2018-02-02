@@ -1,16 +1,17 @@
 import React from 'react';
 import SkyLight from 'react-skylight';
 
-class CategoriesSelect extends React.Component {
-  state = {
-    chosenCategories : this.props.chosenCategories
-  }
 
+class DefineNewStock extends React.Component {
+  state ={
+    showToolTip : false,
+  };
+  chosenCategories = {};
   addCategoryForm(event){
     event.preventDefault();
-    const chosenCategories = {...this.state.chosenCategories};
-    chosenCategories[this.category.value] = parseFloat(this.percentage.value);
-    this.setState({ chosenCategories });
+    const timestamp = Date.now();
+    this.chosenCategories[`c${timestamp}`] = {category_name: this.category.value,
+    category_percentage: this.percentage.value };
     this.category.value = "";
     this.percentage.value = "";
 
@@ -32,7 +33,7 @@ class CategoriesSelect extends React.Component {
   };
 
   renderChosenCategories = (key) => {
-    const category = this.state.chosenCategories[key];
+    const category = this.chosenCategories[key];
     if (category) {
     return(
       <div className="grid-edit modal-edit" key={key}>
@@ -48,23 +49,41 @@ class CategoriesSelect extends React.Component {
     else {return;}
   };
 
+  createStock(event){
+    event.preventDefault();
+    const category = {
+      categoryKey: this.category.value,
+      percentage: 100};
+
+    const timestamp = Date.now()
+    const stock = {
+      name: this.name.value,
+      categories: {[timestamp]: category},
+      amount: parseFloat(this.amount.value),
+      currency: currency ,
+    }
+    console.log('new stock', stock);
+    this.props.addStock(stock);
+    this.stockForm.reset();
+  }
 
   render(){
-    const Categories = (this.state.chosenCategories) ? Object.keys(this.state.chosenCategories).map(this.renderChosenCategories) : '';
+    const toolTip = (this.state.showToolTip) ? <div className="tooltip">`Enter stock symbol, e.g. AAPL. If you want to add cash,
+    enter 'CASH-' and its currency, e.g. CASH-USD.`</div> : null;
     const dialogStyles = {
       zIndex: 5000
     };
     const modal = <SkyLight hideOnOverlayClicked ref={ref => this.animated = ref}
-      title="Add Categories to the Stock"
+      title="Enter Stock Name and Define its Categories"
       transitionDuration={500}
       dialogStyles={dialogStyles}
       >
-    Stock Name: {this.props.stock}
+      <input ref={(input) => this.name = input} type="text" placeholder="Stock Name" required
+          onFocus={() => this.setState({showToolTip : true})} onBlur={() => this.setState({showToolTip : false})}/>
     <div className="grid-edit modal-edit">
       <span className="heading">Category Name </span>
       <span className="heading">Category Percentage </span>
     </div>
-    {Categories}
     <div className="grid-edit modal-edit" ref={(input) => this.categoryForm = input}>
       <select ref={(input) => this.category = input} name="category" required>
         {Object.keys(this.props.categories).map(this.props.renderCategories)}
@@ -73,17 +92,21 @@ class CategoriesSelect extends React.Component {
       />
       <button onClick={(e) => this.addCategoryForm(e)}>+ Add categories</button>
     </div>
+     { toolTip }
       <div className="grid-edit modal-edit"><button className="closeButton" onClick={() => console.log('close')}> Save and Close </button></div>
         </SkyLight>
-    return (
+    return(
       <div>
-        <button className="addCategory" onClick={(e) => {e.preventDefault(); this.animated.show()}}>
-          <i className="fa fa-pie-chart" aria-hidden="true"></i>
-        </button>
+      <button className="addCategory" onClick={(e) => {e.preventDefault(); this.animated.show()}}>
+       Define New Stock
+      </button>
         { modal }
+
       </div>
     )
   }
+
 }
 
-export default CategoriesSelect;
+
+export default DefineNewStock;

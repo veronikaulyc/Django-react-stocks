@@ -1,9 +1,9 @@
 import React from 'react';
-import AddStockForm from './AddStockForm';
+import DefineNewStock from './DefineNewStock';
 import StockHeader from './StockHeader';
 import { isEmpty } from './helpers';
 //import CSSTransitionGroup from 'react-addons-css-transition-group';
-import CategoriesSelect from './CategoriesSelect';
+
 
 class StocksList extends React.Component {
 
@@ -21,8 +21,8 @@ else {return;}
 
 render(){
 
-  const addStockForm = (!isEmpty(this.props.categories)) ?
-    <AddStockForm
+  const defineNewStock = (!isEmpty(this.props.categories)) ?
+    <DefineNewStock
       addStock={this.props.addStock}
       categories={this.props.categories}
       renderCategories={this.renderCategories}
@@ -31,7 +31,7 @@ render(){
       <div>
         <h2>Stocks List</h2>
         <StockHeader />
-        {addStockForm}
+        {defineNewStock}
       </div>
       )
     }

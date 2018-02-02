@@ -15,6 +15,7 @@ class StockHeader extends React.Component {
         <span className="heading">Price</span>
         <span className="heading">Value</span>
         <span className="heading">% of Total </span>
+        
       </div>
     )}
 }

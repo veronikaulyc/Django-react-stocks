@@ -19,7 +19,7 @@ state = {
   stocks: {},
   categories: {},
   currency_names: {},
-  currency: 2,
+  currency: 1,
   prices: {},
   exchangeRates: {},
 };

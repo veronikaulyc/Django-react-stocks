@@ -74,7 +74,7 @@ class Categories extends Component {
       const categoryValue = this.props.categoriesTotal[key] || 0;
       const categoryPercentage = this.props.userTotal ?
         parseInt(1000 * categoryValue / this.props.userTotal, 10) / 10 : 0;
-      const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
+      //const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
     return(
       <div className="grid-edit category-edit" key={key}>
         <input type="text" name="category_name" value={category.category_name} placeholder="Category Name"
@@ -84,9 +84,9 @@ class Categories extends Component {
           <span>{categoryValue.toFixed(2)}</span>
           <span>{categoryPercentage}%</span>
           <select name="favStock" value={category.favStock} onChange={(e) => this.handleChange(e, key)}>
-            {stocksList}
+            replace srocksList
           </select>
-        <button className="deleteButton" onClick={() => this.props.removeCategory(key)} disabled={this.isCategoryStock(key)}> &times;</button>
+        <button className="deleteButton" onClick={() => this.props.removeCategory(key)}> &times;</button>
       </div>
     )
   }

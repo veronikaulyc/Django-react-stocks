@@ -28,6 +28,7 @@ state = {
 componentWillMount(){
   this.getCategories();
   this.fetchCurrency();
+  this.getStocks();
 }
 //categories
 getCategories = () => {
@@ -119,9 +120,34 @@ addCategory = (category) => {
 
 // Stocks
 addStock = (stock) => {
-  console.log('Adding stock', stock);
+  axios.post('/api/newstock', {
+    stock_name: stock,
+    categories: {...this.state.chosenCategories},
+    user: this.state.uid
+  });
+  const chosenCategories = {};
+  this.setState({ chosenCategories });
+  this.getStocks();
+};
+
+getStocks = () => {
+  axios.post('/api/stocks', {user: this.state.uid})
+  .then((response) => {
+    const stocks = response.data;
+    this.setState({ stocks });
+})
+.catch((error) => {
+  console.log(error);
+});
+};
+
+updateStock = (key, updatedStock) => {
+  console.log(updatedStock);
 }
 
+removeStock = (key) => {
+  console.log('do you really want to remove');
+}
 
     render(){
         return(
@@ -129,12 +155,15 @@ addStock = (stock) => {
                 <Header tagline="Stocks Advisor"/>
                 <div className="stocks-main">
                     <StocksList
+                        stocks={this.state.stocks}
                         categories={this.state.categories}
                         addStock={this.addStock}
                         chosenCategories={this.state.chosenCategories}
                         chooseCategory={this.chooseCategory}
                         removeChosenCategory={this.removeChosenCategory}
                         updateChosenCategory={this.updateChosenCategory}
+                        updateStock={this.updateStock}
+                        removeStock={this.removeStock}
                     />
                    <div>
                        <UserCurrency

@@ -53,6 +53,7 @@ class DefineNewStock extends React.Component {
  };
  createStock = () => {
    const stockName = this.stockName.value;
+   this.stockName.value = "";
    this.props.addStock(stockName);
    this.animated.hide();
  };

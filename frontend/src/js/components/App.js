@@ -22,6 +22,7 @@ state = {
   currency: 1,
   prices: {},
   exchangeRates: {},
+  chosenCategories: {}
 };
 
 componentWillMount(){
@@ -98,6 +99,23 @@ addCategory = (category) => {
     axios.put('/api/usercurrency', {user_uid: this.state.uid, user_currency: currency})
     this.setState({ currency });
 };
+//Chosen Categories
+ chooseCategory = (category) => {
+   const chosenCategories = {...this.state.chosenCategories };
+   const timestamp = Date.now();
+   chosenCategories[`c${timestamp}`] = category;
+   this.setState({ chosenCategories });
+ };
+ removeChosenCategory = (key) => {
+   const chosenCategories = {...this.state.chosenCategories};
+   delete chosenCategories[key];
+   this.setState({ chosenCategories });
+ };
+ updateChosenCategory = (key, updatedCategory) => {
+   const chosenCategories = {...this.state.chosenCategories};
+   chosenCategories[key] = updatedCategory;
+   this.setState({ chosenCategories });
+ };
 
 // Stocks
 addStock = (stock) => {
@@ -113,6 +131,10 @@ addStock = (stock) => {
                     <StocksList
                         categories={this.state.categories}
                         addStock={this.addStock}
+                        chosenCategories={this.state.chosenCategories}
+                        chooseCategory={this.chooseCategory}
+                        removeChosenCategory={this.removeChosenCategory}
+                        updateChosenCategory={this.updateChosenCategory}
                     />
                    <div>
                        <UserCurrency

@@ -6,70 +6,74 @@ class DefineNewStock extends React.Component {
   state ={
     showToolTip : false,
   };
-  chosenCategories = {};
-  addCategoryForm(event){
-    event.preventDefault();
-    const timestamp = Date.now();
-    this.chosenCategories[`c${timestamp}`] = {category_name: this.category.value,
-    category_percentage: this.percentage.value };
-    this.category.value = "";
-    this.percentage.value = "";
 
-  }
-
-  handleChange = (e,key) => {
-    const chosenCategories = {...this.state.chosenCategories};
-    console.log('key', e.target.name);
-    console.log('value', e.target.value);
-    //chosenCategories[e.target.name] = e.target.value;
-    this.setState({ chosenCategories });;
-
+  handleChoiceChange = (e,key) => {
+    const category = this.props.chosenCategories[key];
+    const updatedChosenCategory = {
+      ...category,
+      [e.target.name]: e.target.value
+    };
+    this.props.updateChosenCategory(key, updatedChosenCategory);
   };
 
-  removeChosenCategory = (e, key) => {
-    const chosenCategories = {...this.state.chosenCategories};
-    delete chosenCategories[key];
-    this.setState({ chosenCategories });
+  addChosenCategory(event){
+    event.preventDefault();
+    const category = {
+      category_name: this.categoryName.value,
+      category_percentage: parseFloat(this.categoryPercentage.value),
+    };
+    this.props.chooseCategory(category);
+    this.categoryName.value = "";
+    this.categoryPercentage.value = "";
+
   };
 
   renderChosenCategories = (key) => {
-    const category = this.chosenCategories[key];
+    const category = this.props.chosenCategories[key];
     if (category) {
     return(
       <div className="grid-edit modal-edit" key={key}>
-        <select name="category" value={key}
-          onChange={(e) => this.handleChange(e, key)}>
+        <select name="category_name" value={category.category_name}
+          onChange={(e) => this.handleChoiceChange(e, key)}>
           {Object.keys(this.props.categories).map(this.props.renderCategories)}
         </select>
-        <input type="number" name="percentage" value={category} placeholder="%"
-          onChange={(e) => this.handleChange(e, key)}/>
-        <button className="deleteButton" onClick={() => this.removeChosenCategory(key)}> &times;</button>
+        <input type="number" min="0" max="100" name="category_percentage" value={category.category_percentage} placeholder="%"
+          onChange={(e) => this.handleChoiceChange(e, key)}/>
+        <button className="deleteButton" onClick={() => this.props.removeChosenCategory(key)}> &times;</button>
       </div>
     )}
     else {return;}
   };
-
-  createStock(event){
-    event.preventDefault();
-    const category = {
-      categoryKey: this.category.value,
-      percentage: 100};
-
-    const timestamp = Date.now()
-    const stock = {
-      name: this.name.value,
-      categories: {[timestamp]: category},
-      amount: parseFloat(this.amount.value),
-      currency: currency ,
-    }
-    console.log('new stock', stock);
-    this.props.addStock(stock);
-    this.stockForm.reset();
-  }
+ checkSum = () => {
+   let sum = 0;
+   Object.keys(this.props.chosenCategories).forEach(key => {
+     sum += parseFloat(this.props.chosenCategories[key].category_percentage);
+   });
+   return sum;
+ };
+ createStock = () => {
+   const stockName = this.stockName.value;
+   this.props.addStock(stockName);
+   this.animated.hide();
+ };
 
   render(){
-    const toolTip = (this.state.showToolTip) ? <div className="tooltip">`Enter stock symbol, e.g. AAPL. If you want to add cash,
-    enter 'CASH-' and its currency, e.g. CASH-USD.`</div> : null;
+    const toolTip = (this.state.showToolTip) ?
+       <div className="tooltip">
+          `Enter stock symbol, e.g. AAPL. If you want to add cash, enter 'CASH-' and its currency, e.g. CASH-USD.`
+        </div> : "";
+    const Categories = (this.props.chosenCategories) ? Object.keys(this.props.chosenCategories).map(this.renderChosenCategories) : '';
+    let warning ="";
+    if (this.checkSum() > 100) {
+      warning = <div className="notification">
+          "Your total sum of categories percentage is larger than 100%";
+      </div>
+    }
+    else if (this.checkSum() < 100){
+      warning = <div className="notification">
+          "Your total sum of categories percentage is less than 100%";
+      </div>
+    };
     const dialogStyles = {
       zIndex: 5000
     };
@@ -78,23 +82,30 @@ class DefineNewStock extends React.Component {
       transitionDuration={500}
       dialogStyles={dialogStyles}
       >
-      <input ref={(input) => this.name = input} type="text" placeholder="Stock Name" required
+      <input ref={(input) => this.stockName = input} type="text" placeholder="Stock Name" required
           onFocus={() => this.setState({showToolTip : true})} onBlur={() => this.setState({showToolTip : false})}/>
-    <div className="grid-edit modal-edit">
-      <span className="heading">Category Name </span>
-      <span className="heading">Category Percentage </span>
+      { toolTip }
+     <div className="grid-edit modal-edit">
+         <span className="heading">Category Name </span>
+         <span className="heading">Category Percentage </span>
     </div>
-    <div className="grid-edit modal-edit" ref={(input) => this.categoryForm = input}>
-      <select ref={(input) => this.category = input} name="category" required>
+    { Categories }
+    { warning }
+    <div className="grid-edit modal-edit" ref={(input) => this.chosenCategoryForm = input}>
+      <select ref={(input) => this.categoryName = input} name="name" required>
         {Object.keys(this.props.categories).map(this.props.renderCategories)}
       </select>
-      <input type="number" name="percentage"  placeholder="%" ref={(input) => this.percentage = input}
+      <input type="number" min="0" max="100" name="percentage"  defaultValue="100" placeholder="%" ref={(input) => this.categoryPercentage = input}
       />
-      <button onClick={(e) => this.addCategoryForm(e)}>+ Add categories</button>
+      <button onClick={(e) => this.addChosenCategory(e)}>+ Add categories</button>
     </div>
-     { toolTip }
-      <div className="grid-edit modal-edit"><button className="closeButton" onClick={() => console.log('close')}> Save and Close </button></div>
-        </SkyLight>
+
+    <div className="grid-edit modal-edit">
+        <button className="closeButton" disabled={this.checkSum()!=100 || this.stockName.value ==""} onClick={() => this.createStock()}>
+            Save and Close
+        </button>
+    </div>
+    </SkyLight>
     return(
       <div>
       <button className="addCategory" onClick={(e) => {e.preventDefault(); this.animated.show()}}>

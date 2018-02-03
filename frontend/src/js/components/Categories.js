@@ -79,7 +79,7 @@ class Categories extends Component {
       <div className="grid-edit category-edit" key={key}>
         <input type="text" name="category_name" value={category.category_name} placeholder="Category Name"
           onChange={(e) => this.handleChange(e, key)} required/>
-          <input type="number" name="category_percentage" value={category.category_percentage}
+          <input type="number" min="0" max="100" name="category_percentage" value={category.category_percentage}
           onChange={(e) => this.handleChange(e, key)} placeholder="Desirable %"/>
           <span>{categoryValue.toFixed(2)}</span>
           <span>{categoryPercentage}%</span>
@@ -110,7 +110,7 @@ class Categories extends Component {
        <div>{categories}</div>
       <form ref={(input) => this.categoryForm = input} className="grid-edit category-edit" onSubmit={(e) => this.createCategory(e)}>
         <input ref={(input) => this.name = input} type="text" placeholder="Category Name" required/>
-        <input ref={(input) => this.percentage = input} type="number" placeholder="Desirable %" required/>
+        <input ref={(input) => this.percentage = input} type="number" min="0" max="100" placeholder="Desirable %" required/>
         <button type="submit">+ Add Category</button>
       </form>
       </div>

@@ -26,6 +26,10 @@ render(){
       addStock={this.props.addStock}
       categories={this.props.categories}
       renderCategories={this.renderCategories}
+      chosenCategories={this.props.chosenCategories}
+      chooseCategory={this.props.chooseCategory}
+      removeChosenCategory={this.props.removeChosenCategory}
+      updateChosenCategory={this.props.updateChosenCategory}
 /> : '';
   return(
       <div>

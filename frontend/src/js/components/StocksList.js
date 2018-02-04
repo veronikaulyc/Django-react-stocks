@@ -16,6 +16,11 @@ class StocksList extends React.Component {
   this.props.updateStock(key, updatedStock);
 };
 
+ calculateStockPrice = (key) => {
+   const currency = this.props.stocks[key].stock_currency;
+   const price = this.props.stocks[key].stock_price;
+   
+ };
   renderStocksList = (key) => {
     const stock = this.props.stocks[key];
     if (stock) {

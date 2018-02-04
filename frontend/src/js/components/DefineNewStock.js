@@ -110,7 +110,7 @@ class DefineNewStock extends React.Component {
     return(
       <div>
       <button className="addCategory" onClick={(e) => {e.preventDefault(); this.animated.show()}}>
-       Define New Stock
+       Define A New Stock
       </button>
         { modal }
 

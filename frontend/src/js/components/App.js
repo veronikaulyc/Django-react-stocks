@@ -20,7 +20,6 @@ state = {
   categories: {},
   currency_names: {},
   currency: 1,
-  prices: {},
   exchangeRates: {},
   chosenCategories: {}
 };
@@ -28,6 +27,7 @@ state = {
 componentWillMount(){
   this.getCategories();
   this.fetchCurrency();
+  this.getExchangeRates();
   this.getStocks();
 }
 //categories
@@ -100,6 +100,21 @@ addCategory = (category) => {
     axios.put('/api/usercurrency', {user_uid: this.state.uid, user_currency: currency})
     this.setState({ currency });
 };
+getExchangeRates = () => {
+  axios.get('/api/exchangerates')
+  .then((response) => {
+    if (response.data) {
+         const exchangeRates = {};
+         response.data.forEach(rate =>{
+           exchangeRates[rate.pk] = rate.fields;
+         });
+         this.setState({ exchangeRates });
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+};
 //Chosen Categories
  chooseCategory = (category) => {
    const chosenCategories = {...this.state.chosenCategories };
@@ -155,8 +170,9 @@ removeStock = (key) => {
                 <Header tagline="Stocks Advisor"/>
                 <div className="stocks-main">
                     <StocksList
-                        stocks={this.state.stocks}
+                        currency={this.state.currency}
                         categories={this.state.categories}
+                        stocks={this.state.stocks}
                         addStock={this.addStock}
                         chosenCategories={this.state.chosenCategories}
                         chooseCategory={this.chooseCategory}

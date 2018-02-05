@@ -15,17 +15,40 @@ class StocksList extends React.Component {
      }
   this.props.updateStock(key, updatedStock);
 };
+exchangeRatioByName = (name) => {
+  let ratio = 0;
+  Object.keys(this.props.exchangeRates).forEach((key) => {
+    if (this.props.exchangeRates[key].currency_name == name){
+      ratio = this.props.exchangeRates[key].currency_ratio;
+    }
+  });
+  return ratio;
+}
 
  calculateStockPrice = (key) => {
-   const currency = this.props.stocks[key].stock_currency;
+   let stockPrice;
+   const stockCurrencyName = this.props.currency_names[this.props.stocks[key].stock_currency];
+   const userCurrencyName = this.props.currency_names[this.props.currency];
    const price = this.props.stocks[key].stock_price;
-   
+   const today = new Date();
+   console.log('today', today);
+   const updated = (this.props.stocks[key].update_date == today);
+   console.log('updated', updated);
+   const ratio = this.exchangeRatioByName(`${stockCurrencyName}to${userCurrencyName}`)
+   if (this.props.stocks[key].stock_currency == 1){
+     stockPrice = price * ratio / 100;
+   }
+   else {
+     stockPrice = price * ratio;
+   }
+   return stockPrice;
  };
   renderStocksList = (key) => {
     const stock = this.props.stocks[key];
     if (stock) {
       //display categories
       const stockCategory =  "";
+      const stockPrice = this.calculateStockPrice(key).toFixed(2);
     return(
       <div className="grid-edit stock-edit" key={key}>
         <input type="text" name="stock_name" value={stock.stock_name} placeholder="Stock Name"
@@ -36,7 +59,7 @@ class StocksList extends React.Component {
             {stockCategory}
             D...
           </span>
-          <span>0</span>
+          <span>{stockPrice}</span>
           <span>0</span>
           <span>0</span>
         <button className="deleteButton" onClick={() => this.props.removeStock(key)}> &times;</button>

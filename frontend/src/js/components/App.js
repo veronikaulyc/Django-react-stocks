@@ -180,6 +180,8 @@ removeStock = (key) => {
                         updateChosenCategory={this.updateChosenCategory}
                         updateStock={this.updateStock}
                         removeStock={this.removeStock}
+                        exchangeRates={this.state.exchangeRates}
+                        currency_names={this.state.currency_names}
                     />
                    <div>
                        <UserCurrency

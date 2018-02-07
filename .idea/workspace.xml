@@ -22,8 +22,8 @@
       <file leaf-file-name="currencies.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/api/views/currencies.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="39" column="49" lean-forward="false" selection-start-line="39" selection-start-column="49" selection-end-line="39" selection-end-column="49" />
+            <state relative-caret-position="277">
+              <caret line="37" column="8" lean-forward="false" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
               <folding>
                 <element signature="e#1#37#0" expanded="true" />
               </folding>
@@ -31,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="stocks.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="stocks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/backend/api/views/stocks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-915">
-              <caret line="31" column="88" lean-forward="true" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="88" />
+            <state relative-caret-position="169">
+              <caret line="90" column="52" lean-forward="false" selection-start-line="90" selection-start-column="52" selection-end-line="90" selection-end-column="52" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -77,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/api/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="6" column="65" lean-forward="false" selection-start-line="6" selection-start-column="65" selection-end-line="6" selection-end-column="65" />
+            <state relative-caret-position="439">
+              <caret line="75" column="42" lean-forward="false" selection-start-line="75" selection-start-column="42" selection-end-line="75" selection-end-column="42" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -132,9 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>currency_names</find>
-      <find>view</find>
-      <find>json</find>
       <find>gener</find>
       <find>loader</find>
       <find>render</find>
@@ -146,7 +143,6 @@
       <find>&quot;priceOffer&quot;:</find>
       <find>priceOffer</find>
       <find>27</find>
-      <find>date</find>
       <find>תאריך</find>
       <find>2018</find>
       <find>reportDate</find>
@@ -161,7 +157,11 @@
       <find>pk=</find>
       <find>seriali</find>
       <find>json.d</find>
+      <find>today</find>
       <find>seria</find>
+      <find>fet</find>
+      <find>date</find>
+      <find>get_stock_price</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -208,10 +208,10 @@
         <option value="$PROJECT_DIR$/backend/api/test.py" />
         <option value="$PROJECT_DIR$/backend/api/models/Stock.py" />
         <option value="$PROJECT_DIR$/backend/api/urls.py" />
-        <option value="$PROJECT_DIR$/backend/api/views/stocks.py" />
         <option value="$PROJECT_DIR$/backend/api/models/Currency.py" />
         <option value="$PROJECT_DIR$/backend/api/views/currencies.py" />
         <option value="$PROJECT_DIR$/backend/api/fetcher.py" />
+        <option value="$PROJECT_DIR$/backend/api/views/stocks.py" />
       </list>
     </option>
   </component>
@@ -680,16 +680,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/api/views/stocks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-915">
-          <caret line="31" column="88" lean-forward="true" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="88" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backend/api/views/categories.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="70">
@@ -702,8 +692,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/api/views/currencies.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="39" column="49" lean-forward="false" selection-start-line="39" selection-start-column="49" selection-end-line="39" selection-end-column="49" />
+        <state relative-caret-position="277">
+          <caret line="37" column="8" lean-forward="false" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
           <folding>
             <element signature="e#1#37#0" expanded="true" />
           </folding>
@@ -712,10 +702,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/api/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="65" lean-forward="false" selection-start-line="6" selection-start-column="65" selection-end-line="6" selection-end-column="65" />
+        <state relative-caret-position="439">
+          <caret line="75" column="42" lean-forward="false" selection-start-line="75" selection-start-column="42" selection-end-line="75" selection-end-column="42" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/api/views/stocks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="90" column="52" lean-forward="false" selection-start-line="90" selection-start-column="52" selection-end-line="90" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>

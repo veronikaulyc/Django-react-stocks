@@ -1,6 +1,7 @@
 import React from 'react';
 import DefineNewStock from './DefineNewStock';
 import StockHeader from './StockHeader';
+import ActionStock from './ActionStock';
 import { isEmpty } from './helpers';
 //import CSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -43,21 +44,39 @@ exchangeRatioByName = (name) => {
    }
    return stockPrice;
  };
+
   renderStocksList = (key) => {
     const stock = this.props.stocks[key];
     if (stock) {
       //display categories
-      const stockCategory =  "";
+      let stockCategory =  "";
+      stock.categories.forEach((catKey) => {
+        stockCategory+=`${this.props.categories[catKey.category].category_name}; `});
+      stockCategory = stockCategory.slice(0, -2);
+      if (stockCategory.length >12) { stockCategory = stockCategory.substring(0,11)+'...' }
+      //display price
       const stockPrice = this.calculateStockPrice(key).toFixed(2);
+      //display amount
+      const stockAmount = 0;
     return(
       <div className="grid-edit stock-edit" key={key}>
         <input type="text" name="stock_name" value={stock.stock_name} placeholder="Stock Name"
-          onChange={(e) => this.handleChange(e, key)}/>
-          <input type="number" name="amount" value="0"
-          onChange={(e) => this.handleChange(e, key)} placeholder="Stock Amount"/>
+          onChange={(e) => this.handleChange(e, key)}
+          />
+          <span>
+             {stockAmount}
+             <ActionStock
+                 stockKey={key}
+                 stockName={stock.stock_name}
+                 stockPrice={stockPrice}
+                 stockAmount={stockAmount}
+             />
+          </span>
           <span>
             {stockCategory}
-            D...
+            <button>
+            <i className="fa fa-pie-chart" aria-hidden="true"></i>
+            </button>
           </span>
           <span>{stockPrice}</span>
           <span>0</span>

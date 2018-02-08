@@ -1,7 +1,7 @@
 import React from 'react';
 import DefineNewStock from './DefineNewStock';
 import StockHeader from './StockHeader';
-import ActionStock from './ActionStock';
+import NewTradeRecord from './NewTradeRecord';
 import { isEmpty } from './helpers';
 //import CSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -65,7 +65,7 @@ exchangeRatioByName = (name) => {
           />
           <span>
              {stockAmount}
-             <ActionStock
+             <NewTradeRecord
                  stockKey={key}
                  stockName={stock.stock_name}
                  stockPrice={stockPrice}

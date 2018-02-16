@@ -6,6 +6,20 @@ export function isEmpty(obj) {
     return true;
 };
 
+export function today_calculated(){
+  const now = new Date;
+  let month = (now.getMonth() + 1);
+  let day = now.getDate();
+  if (month < 10) {
+      month = "0" + month;
+    }
+  if (day < 10) {
+        day = "0" + day;
+    }
+  const today = now.getFullYear() + '-' + month + '-' + day;
+  return today;
+}
+
 export const defaultStocks = {
   stock1: {
     name: "AAPL",

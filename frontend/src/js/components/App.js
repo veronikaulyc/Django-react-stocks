@@ -158,11 +158,21 @@ getStocks = () => {
 
 updateStock = (key, updatedStock) => {
   console.log(updatedStock);
-}
+};
 
 removeStock = (key) => {
   console.log('do you really want to remove');
-}
+};
+
+addStockAction = (amount, price, date, stockName) => {
+  axios.post('/api/newstock', {
+    stock_name: stockName,
+    amount: amount,
+    purchase_price: price,
+    purchase_date: date,
+    user: this.state.uid
+  });
+};
 
     render(){
         return(
@@ -182,6 +192,7 @@ removeStock = (key) => {
                         removeStock={this.removeStock}
                         exchangeRates={this.state.exchangeRates}
                         currency_names={this.state.currency_names}
+                        addStockAction={this.addStockAction}
                     />
                    <div>
                        <UserCurrency

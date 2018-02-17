@@ -178,7 +178,7 @@ exchangeRatioByName = (name) => {
 calculate_stock_ratio = (key) => {
   const stockCurrencyName = this.state.currency_names[this.state.stocks[key].stock_currency];
   const userCurrencyName = this.state.currency_names[this.state.currency];
-  return this.exchangeRatioByName(`${stockCurrencyName}to${userCurrencyName}`);
+  return this.exchangeRatioByName(`${userCurrencyName}to${stockCurrencyName}`);
 }
 
  calculateStockPrice = (key) => {
@@ -218,7 +218,7 @@ calculate_stock_ratio = (key) => {
    Object.keys(this.state.stocks).forEach((stockKey) => {
       this.state.stocks[stockKey].categories.forEach((cat) => {
           if (cat.category == categoryKey) {
-             categoryValue += cat.percentage * this.calculateStockValue(stockKey) / 100;
+            categoryValue += parseFloat(cat.category_percentage) * this.calculateStockValue(stockKey) / 100;
        }
      });
    });
@@ -230,7 +230,7 @@ calculate_stock_ratio = (key) => {
  }
 
 addStockAction = (amount, price, date, stockName, stockKey) => {
-  const ratio = this.calculate_stock_ratio(key);
+  const ratio = this.calculate_stock_ratio(stockKey);
   const originalPrice = price / ratio;
   axios.post('/api/newstock', {
     stock_name: stockName,

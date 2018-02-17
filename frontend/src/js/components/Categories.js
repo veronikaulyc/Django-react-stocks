@@ -28,27 +28,34 @@ class Categories extends Component {
     if (this.props.stocks) {
     Object.keys(this.props.stocks).forEach((key) => {
       const stock = this.props.stocks[key];
-      if (stock){
-        Object.keys(stock.categories).forEach((cKey) => {
-          if (stock.categories[cKey].categoryKey === categoryKey) {
+      stock.categories.forEach((cat) => {
+          if (parseInt(cat.category) === parseInt(categoryKey)) {
             isFound = true;
             return isFound;
           }
         });
-      }});
+      });
     }
     return isFound;
+  };
+
+  totalPercentage = () => {
+    let total = 0;
+    Object.keys(this.props.categories).forEach((key) => {
+      total += this.props.categories[key].category_percentage;
+    });
+    return total;
   };
 
   renderCategoryStock = (stockKey,categoryKey) => {
       const stock = this.props.stocks[stockKey];
       let stockList = "";
       if (stock){
-        Object.keys(stock.categories).forEach((cKey) => {
-          if (stock.categories[cKey].categoryKey === categoryKey){
+        stock.categories.forEach((cat) =>{
+          if (parseInt(cat.category) === parseInt(categoryKey)){
             stockList =
               <option value={stockKey} key={`${stockKey}${categoryKey}`}>
-                { stock.name }
+                { stock.stock_name }
               </option>;
           }
         });
@@ -56,24 +63,12 @@ class Categories extends Component {
     return stockList;
   };
 
-  largerThanHundred = () => {
-    let sum = 0;
-    if (!isEmpty(this.props.categories)){
-      Object.keys(this.props.categories).forEach((key) => {
-        if (this.props.categories[key]) {
-          sum += parseFloat(this.props.categories[key].percentage);
-        }
-      });
-    }
-   return (sum > 100);
-  };
-
   renderCategoriesList = (key) => {
     const category = this.props.categories[key];
     if (category) {
       const categoryValue = this.props.calculateCategoryValue(key);
       const categoryPercentage = this.props.calculateCategoryPercentage(key, this.props.total);
-      //const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
+      const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
     return(
       <div className="grid-edit category-edit" key={key}>
         <input type="text" name="category_name" value={category.category_name} placeholder="Category Name"
@@ -81,11 +76,12 @@ class Categories extends Component {
           <input type="number" min="0" max="100" name="category_percentage" value={category.category_percentage}
           onChange={(e) => this.handleChange(e, key)} placeholder="Desirable %"/>
           <span>{categoryValue.toFixed(2)}</span>
-          <span>{categoryPercentage}%</span>
+          <span>{categoryPercentage.toFixed(2)}%</span>
           <select name="favStock" value={category.favStock} onChange={(e) => this.handleChange(e, key)}>
-            replace srocksList
+            { stocksList }
           </select>
-        <button className="deleteButton" onClick={() => this.props.removeCategory(key)}> &times;</button>
+        <button className="deleteButton" onClick={() => this.props.removeCategory(key)}
+            disabled={this.isCategoryStock(key)}> &times;</button>
       </div>
     )
   }
@@ -107,6 +103,10 @@ class Categories extends Component {
           <span className="heading">Favourite stock </span>
         </div>
        <div>{categories}</div>
+       <div>
+       <span>Total percentage </span>
+       <span>{this.totalPercentage()} </span>
+       </div>
       <form ref={(input) => this.categoryForm = input} className="grid-edit category-edit" onSubmit={(e) => this.createCategory(e)}>
         <input ref={(input) => this.name = input} type="text" placeholder="Category Name" required/>
         <input ref={(input) => this.percentage = input} type="number" min="0" max="100" placeholder="Desirable %" required/>

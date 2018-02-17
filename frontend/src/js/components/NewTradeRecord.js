@@ -66,7 +66,7 @@ class NewTradeRecord extends React.Component {
                defaultValue="0" onChange={this.calculate_value} required/>
             <input ref={(input) => this.price = input} type="number" placeholder="Stock Price"
             defaultValue={this.props.stockPrice} onChange={this.calculate_value}/>
-            <span>{this.state.value}</span>
+            <span>{this.state.value.toFixed(2)}</span>
             <input ref={(input) => this.date = input} type="date" placeholder="Action Date"
             defaultValue={today_calculated()}/>
         </form>

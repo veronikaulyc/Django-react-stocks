@@ -56,7 +56,7 @@ class StocksList extends React.Component {
           </span>
           <span className={(!updated) ? "red" : "black"}>{stockPrice}</span>
           <span>{this.props.calculateStockValue(key).toFixed(2)}</span>
-          <span>{this.props.calculateStockPercentage(key, this.props.total)}</span>
+          <span>{this.props.calculateStockPercentage(key, this.props.total).toFixed(2)}</span>
         <button className="deleteButton" onClick={() => this.props.removeStock(key)}> &times;</button>
       </div>
     )}

@@ -2,7 +2,7 @@ import React from 'react';
 import DefineNewStock from './DefineNewStock';
 import StockHeader from './StockHeader';
 import NewTradeRecord from './NewTradeRecord';
-import { isEmpty, today_calculated } from './helpers';
+import { isEmpty } from './helpers';
 
 //import CSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -18,27 +18,6 @@ class StocksList extends React.Component {
   this.props.updateStock(key, updatedStock);
 };
 
-exchangeRatioByName = (name) => {
-  let ratio = 0;
-  Object.keys(this.props.exchangeRates).forEach((key) => {
-    if (this.props.exchangeRates[key].currency_name == name){
-      ratio = this.props.exchangeRates[key].currency_ratio;
-    }
-  });
-  return ratio;
-}
-
- calculateStockPrice = (key) => {
-   let stockPrice;
-   const stockCurrencyName = this.props.currency_names[this.props.stocks[key].stock_currency];
-   const userCurrencyName = this.props.currency_names[this.props.currency];
-   const price = this.props.stocks[key].stock_price;
-   const today = today_calculated();
-   const updated = (this.props.stocks[key].update_date == today);
-   const ratio = this.exchangeRatioByName(`${stockCurrencyName}to${userCurrencyName}`);
-   return [price * ratio, updated];
- };
-
   renderStocksList = (key) => {
     const stock = this.props.stocks[key];
     if (stock) {
@@ -49,10 +28,10 @@ exchangeRatioByName = (name) => {
       stockCategory = stockCategory.slice(0, -2);
       const stockCategoryShort =  (stockCategory.length >12) ?  stockCategory.substring(0,11)+'...' : stockCategory;
       //display price
-      const stockPrice = this.calculateStockPrice(key)[0].toFixed(2);
-      const updated = this.calculateStockPrice(key)[1];
+      const stockPrice = this.props.calculateStockPrice(key)[0].toFixed(2);
+      const updated = this.props.calculateStockPrice(key)[1];
       //display amount
-      const stockAmount = 0;
+      const stockAmount = this.props.calculateStockAmount(key);
     return(
       <div className="grid-edit stock-edit" key={key}>
         <input type="text" name="stock_name" value={stock.stock_name} placeholder="Stock Name"
@@ -63,6 +42,7 @@ exchangeRatioByName = (name) => {
              <NewTradeRecord
                  stockName={stock.stock_name}
                  stockPrice={stockPrice}
+                 stockKey={key}
                  stockAmount={stockAmount}
                  categories={stockCategory}
                  addStockAction={this.props.addStockAction}
@@ -75,8 +55,8 @@ exchangeRatioByName = (name) => {
             </button>
           </span>
           <span className={(!updated) ? "red" : "black"}>{stockPrice}</span>
-          <span>0</span>
-          <span>0</span>
+          <span>{this.props.calculateStockValue(key).toFixed(2)}</span>
+          <span>{this.props.calculateStockPercentage(key, this.props.total)}</span>
         <button className="deleteButton" onClick={() => this.props.removeStock(key)}> &times;</button>
       </div>
     )}
@@ -112,6 +92,7 @@ render(){
         <h2>Stocks List</h2>
         <StockHeader />
         { stocksList }
+          Total: {this.props.total.toFixed(2)}
         {defineNewStock}
       </div>
       )

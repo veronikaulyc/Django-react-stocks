@@ -20,7 +20,7 @@ class NewTradeRecord extends React.Component {
     const price = this.price. value;
     const date = this.date.value;
 
-    this.props.addStockAction(amount, price, date, this.props.stockName);
+    this.props.addStockAction(amount, price, date, this.props.stockName, this.props.stockKey);
     this.amount.value = 0;
     this.price.value = this.props.stockPrice;
     this.date.value = today_calculated();

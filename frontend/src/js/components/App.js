@@ -4,6 +4,7 @@ import StocksList from './StocksList';
 import Categories from './Categories';
 import UserCurrency from './UserCurrency';
 import axios from 'axios';
+import { today_calculated } from './helpers';
 
 class App extends Component {
   constructor(){
@@ -164,17 +165,84 @@ removeStock = (key) => {
   console.log('do you really want to remove');
 };
 
-addStockAction = (amount, price, date, stockName) => {
+exchangeRatioByName = (name) => {
+  let ratio = 0;
+  Object.keys(this.state.exchangeRates).forEach((key) => {
+    if (this.state.exchangeRates[key].currency_name == name){
+      ratio = this.state.exchangeRates[key].currency_ratio;
+    }
+  });
+  return ratio;
+}
+
+calculate_stock_ratio = (key) => {
+  const stockCurrencyName = this.state.currency_names[this.state.stocks[key].stock_currency];
+  const userCurrencyName = this.state.currency_names[this.state.currency];
+  return this.exchangeRatioByName(`${stockCurrencyName}to${userCurrencyName}`);
+}
+
+ calculateStockPrice = (key) => {
+
+   const price = this.state.stocks[key].stock_price;
+   const updated = (this.state.stocks[key].update_date == today_calculated());
+   const ratio = this.calculate_stock_ratio(key);
+   return [price * ratio, updated];
+ };
+
+ calculateStockAmount = (key) => {
+   const stock = this.state.stocks[key];
+   let amount = 0;
+   stock.purchases.forEach(purchase => amount += parseInt(purchase.amount));
+   return amount;
+ };
+
+ calculateStockValue = (key) => {
+   const stockPrice = this.calculateStockPrice(key)[0];
+   return stockPrice * this.calculateStockAmount(key);
+ };
+
+ calculateTotal = () => {
+   let total = 0;
+   Object.keys(this.state.stocks).forEach((key) => {
+     total += this.calculateStockValue(key);
+   });
+   return total;
+ };
+
+ calculateStockPercentage = (key, total) => {
+   return (total != 0) ? 100 * this.calculateStockValue(key) / total : 0;
+ };
+
+ calculateCategoryValue = (categoryKey) => {
+   let categoryValue = 0;
+   Object.keys(this.state.stocks).forEach((stockKey) => {
+      this.state.stocks[stockKey].categories.forEach((cat) => {
+          if (cat.category == categoryKey) {
+             categoryValue += cat.percentage * this.calculateStockValue(stockKey) / 100;
+       }
+     });
+   });
+   return categoryValue;
+ };
+
+ calculateCategoryPercentage = (categoryKey, total) => {
+   return (total != 0) ? 100 * this.calculateCategoryValue(categoryKey) / total : 0;
+ }
+
+addStockAction = (amount, price, date, stockName, stockKey) => {
+  const ratio = this.calculate_stock_ratio(key);
+  const originalPrice = price / ratio;
   axios.post('/api/newstock', {
     stock_name: stockName,
     amount: amount,
-    purchase_price: price,
+    purchase_price: originalPrice,
     purchase_date: date,
     user: this.state.uid
   });
 };
 
     render(){
+      const total = this.calculateTotal();
         return(
             <div>
                 <Header tagline="Stocks Advisor"/>
@@ -193,6 +261,11 @@ addStockAction = (amount, price, date, stockName) => {
                         exchangeRates={this.state.exchangeRates}
                         currency_names={this.state.currency_names}
                         addStockAction={this.addStockAction}
+                        calculateStockPrice={this.calculateStockPrice}
+                        calculateStockAmount={this.calculateStockAmount}
+                        calculateStockValue = {this.calculateStockValue}
+                        total = {total}
+                        calculateStockPercentage = {this.calculateStockPercentage}
                     />
                    <div>
                        <UserCurrency
@@ -206,8 +279,9 @@ addStockAction = (amount, price, date, stockName) => {
                           addCategory={this.addCategory}
                           removeCategory={this.removeCategory}
                           updateCategory={this.updateCategory}
-                          categoriesTotal={this.categoriesTotal}
-                          userTotal={this.userTotal}
+                          total={total}
+                          calculateCategoryValue={this.calculateCategoryValue}
+                          calculateCategoryPercentage={this.calculateCategoryPercentage}
                        />
                    </div>
              </div>

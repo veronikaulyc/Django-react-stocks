@@ -71,9 +71,8 @@ class Categories extends Component {
   renderCategoriesList = (key) => {
     const category = this.props.categories[key];
     if (category) {
-      const categoryValue = this.props.categoriesTotal[key] || 0;
-      const categoryPercentage = this.props.userTotal ?
-        parseInt(1000 * categoryValue / this.props.userTotal, 10) / 10 : 0;
+      const categoryValue = this.props.calculateCategoryValue(key);
+      const categoryPercentage = this.props.calculateCategoryPercentage(key, this.props.total);
       //const stocksList = (this.props.stocks) ? Object.keys(this.props.stocks).map(stockKey => this.renderCategoryStock(stockKey, key)) : "";
     return(
       <div className="grid-edit category-edit" key={key}>
